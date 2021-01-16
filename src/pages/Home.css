@@ -1,0 +1,15 @@
+ion-segment-button ion-label {
+  margin-right: 1rem;
+}
+
+ion-footer {
+  display: flex;
+  padding: 1rem 0;
+}
+
+ion-text {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
