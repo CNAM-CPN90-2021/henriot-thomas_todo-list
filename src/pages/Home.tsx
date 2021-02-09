@@ -16,44 +16,56 @@ import {
 import { addOutline } from "ionicons/icons"
 import React, { useState, useRef } from "react"
 import { TodoList } from "../components/TodoList"
-import { ALL_TODOS, COMPLETED_TODOS, UNCOMPLETED_TODOS } from "../constants"
+import { TODOS_TYPE } from "../constants"
+import { Todo } from "../hooks/useTodos"
 import "./Home.css"
 
-const Home = ({ todos }) => {
-  const [currentPage, setCurrentPage] = useState(UNCOMPLETED_TODOS)
+const Home = ({
+  todos,
+}: {
+  todos: {
+    list: Todo[]
+    add: Function
+    remove: Function
+    toggle: Function
+    update: Function
+  }
+}) => {
+  const [currentPage, setCurrentPage] = useState(TODOS_TYPE.UNCOMPLETED)
   const [text, setText] = useState("")
 
-  const completedTodos = todos.list.filter(todo => todo.completed)
-  const uncompletedTodos = todos.list.filter(todo => !todo.completed)
+  const completedTodos = todos.list.filter((todo: Todo) => todo.completed)
+  const uncompletedTodos = todos.list.filter((todo: Todo) => !todo.completed)
   const allTodos = todos.list
 
-  const todoInput = useRef("todoInput")
+  const todoInput = useRef<HTMLIonInputElement>(null)
 
   const pages = [
-    { value: ALL_TODOS, label: "Tous" },
-    { value: UNCOMPLETED_TODOS, label: "A Faire" },
-    { value: COMPLETED_TODOS, label: "Fait" },
+    { value: TODOS_TYPE.ALL, label: "Tous" },
+    { value: TODOS_TYPE.UNCOMPLETED, label: "A Faire" },
+    { value: TODOS_TYPE.COMPLETED, label: "Fait" },
   ]
 
-  const handleChange = function (e) {
+  const handleChange = function (e: CustomEvent) {
     setText(e.detail.value)
   }
 
   const handleClick = function () {
     if (text.length > 0) {
       todos.add(text)
-      todoInput.current.value = ""
+      if (todoInput.current !== null) todoInput.current.value = ""
     }
+  }
+
+  const handleChangePage = function (e: CustomEvent) {
+    setCurrentPage(e.detail.value)
   }
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonSegment
-            value={currentPage}
-            onIonChange={e => setCurrentPage(e.detail.value)}
-          >
+          <IonSegment value={currentPage} onIonChange={handleChangePage}>
             {pages.map(page => (
               <IonSegmentButton
                 value={page.value}
@@ -62,9 +74,9 @@ const Home = ({ todos }) => {
               >
                 <IonLabel>{page.label}</IonLabel>
                 <IonBadge>
-                  {page.value === ALL_TODOS
+                  {page.value === TODOS_TYPE.ALL
                     ? allTodos.length
-                    : page.value === COMPLETED_TODOS
+                    : page.value === TODOS_TYPE.COMPLETED
                     ? completedTodos.length
                     : uncompletedTodos.length}
                 </IonBadge>
@@ -77,9 +89,9 @@ const Home = ({ todos }) => {
       <IonContent fullscreen>
         <TodoList
           todos={
-            currentPage === ALL_TODOS
+            currentPage === TODOS_TYPE.ALL
               ? allTodos
-              : currentPage === COMPLETED_TODOS
+              : currentPage === TODOS_TYPE.COMPLETED
               ? completedTodos
               : uncompletedTodos
           }
@@ -87,7 +99,7 @@ const Home = ({ todos }) => {
           updateTodo={todos.update}
           removeTodo={todos.remove}
         />
-        <IonFab slot="fixed" vertical="bottom" horizontal="end" edge="true">
+        <IonFab slot="fixed" vertical="bottom" horizontal="end" edge={true}>
           <IonFabButton onClick={handleClick} disabled={text.length === 0}>
             <IonIcon icon={addOutline} />
           </IonFabButton>

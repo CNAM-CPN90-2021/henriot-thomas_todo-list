@@ -8,32 +8,47 @@ import {
 } from "@ionic/react"
 import { pencil, checkmark, removeCircle } from "ionicons/icons"
 import React, { useRef, useState } from "react"
+import { Todo } from "../hooks/useTodos"
 
-export const TodoItem = ({ todo, toggleTodo, updateTodo, removeTodo }) => {
+export const TodoItem = ({
+  todo,
+  toggleTodo,
+  updateTodo,
+  removeTodo,
+}: {
+  todo: Todo
+  toggleTodo: Function
+  updateTodo: Function
+  removeTodo: Function
+}) => {
   const [text, setText] = useState(todo.label)
   const [edition, setEdition] = useState(false)
-  const todoInput = useRef(`todo-input-${todo.id}`)
+  const todoInput = useRef<HTMLIonInputElement>(null)
 
   const handleClick = async function () {
-    const input = await todoInput.current.getInputElement()
+    const input = await todoInput.current?.getInputElement()
     if (edition) {
       if (text.length > 0) {
         updateTodo(todo.id, { label: text })
         setEdition(false)
-        todoInput.current.blur()
+        todoInput.current?.blur()
       }
     } else {
       setEdition(true)
-      input.focus()
-      input.select()
+      input?.focus()
+      input?.select()
     }
   }
 
-  const handleFocus = function (e) {
+  const handleFocus = function () {
     if (!edition) {
       toggleTodo(todo.id)
-      todoInput.current.setBlur()
+      todoInput.current?.setBlur()
     }
+  }
+
+  const handleChange = function (e: CustomEvent) {
+    setText(e.detail.value)
   }
 
   return (
@@ -49,7 +64,7 @@ export const TodoItem = ({ todo, toggleTodo, updateTodo, removeTodo }) => {
         inputMode="text"
         value={text}
         readonly={!edition}
-        onIonChange={e => setText(e.detail.value)}
+        onIonChange={handleChange}
         onKeyUp={e => (e.key === "Enter" ? handleClick() : e.preventDefault())}
         onFocus={handleFocus}
       />

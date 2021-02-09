@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useStorage } from "@ionic/react-hooks/storage"
-import { ALL_TODOS, COMPLETED_TODOS, UNCOMPLETED_TODOS } from "../constants"
+import { TODOS_TYPE } from "../constants"
 
 const TODOS_STORAGE = "todos"
 
@@ -50,20 +50,22 @@ export const useTodos = function () {
   }
 
   const toggle = function (id: number) {
-    const { completed = true } = list.find(todo => todo.id === id)
-    update(id, { completed: !completed })
+    const todo = list.find(todo => todo.id === id)
+    if (typeof todo != "undefined") {
+      update(id, { completed: !todo.completed })
+    }
   }
 
-  const clear = function (type: string = ALL_TODOS) {
-    let newTodos = []
+  const clear = function (type: string = TODOS_TYPE.ALL) {
+    let newTodos: Todo[] = []
     switch (type) {
-      case COMPLETED_TODOS:
+      case TODOS_TYPE.COMPLETED:
         newTodos = list.filter(todo => !todo.completed)
         break
-      case UNCOMPLETED_TODOS:
+      case TODOS_TYPE.UNCOMPLETED:
         newTodos = list.filter(todo => todo.completed)
         break
-      case ALL_TODOS:
+      case TODOS_TYPE.ALL:
       default:
         newTodos = []
         break

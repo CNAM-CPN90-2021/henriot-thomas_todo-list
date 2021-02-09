@@ -1,8 +1,19 @@
 import { IonList, IonText } from "@ionic/react"
 import React, { Fragment } from "react"
+import { Todo } from "../hooks/useTodos"
 import { TodoItem } from "./TodoItem"
 
-export const TodoList = ({ todos, toggleTodo, updateTodo, removeTodo }) => {
+export const TodoList = ({
+  todos,
+  toggleTodo,
+  updateTodo,
+  removeTodo,
+}: {
+  todos: Todo[]
+  toggleTodo: Function
+  updateTodo: Function
+  removeTodo: Function
+}) => {
   if (todos.length === 0)
     return (
       <IonText>
