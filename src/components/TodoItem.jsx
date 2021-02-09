@@ -16,7 +16,6 @@ export const TodoItem = ({ todo, toggleTodo, updateTodo, removeTodo }) => {
 
   const handleClick = async function () {
     const input = await todoInput.current.getInputElement()
-    console.log(input)
     if (edition) {
       if (text.length > 0) {
         updateTodo(todo.id, { label: text })

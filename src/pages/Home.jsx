@@ -16,21 +16,23 @@ import {
 import { addOutline } from "ionicons/icons"
 import React, { useState, useRef } from "react"
 import { TodoList } from "../components/TodoList"
-import { ALL_TODOS, UNCOMPLETED_TODOS } from "../constants"
+import { ALL_TODOS, COMPLETED_TODOS, UNCOMPLETED_TODOS } from "../constants"
 import "./Home.css"
 
 const Home = ({ todos }) => {
   const [currentPage, setCurrentPage] = useState(UNCOMPLETED_TODOS)
   const [text, setText] = useState("")
 
+  const completedTodos = todos.list.filter(todo => todo.completed)
   const uncompletedTodos = todos.list.filter(todo => !todo.completed)
   const allTodos = todos.list
 
   const todoInput = useRef("todoInput")
 
   const pages = [
-    { value: UNCOMPLETED_TODOS, label: "A Faire" },
     { value: ALL_TODOS, label: "Tous" },
+    { value: UNCOMPLETED_TODOS, label: "A Faire" },
+    { value: COMPLETED_TODOS, label: "Fait" },
   ]
 
   const handleChange = function (e) {
@@ -62,6 +64,8 @@ const Home = ({ todos }) => {
                 <IonBadge>
                   {page.value === ALL_TODOS
                     ? allTodos.length
+                    : page.value === COMPLETED_TODOS
+                    ? completedTodos.length
                     : uncompletedTodos.length}
                 </IonBadge>
               </IonSegmentButton>
@@ -72,7 +76,13 @@ const Home = ({ todos }) => {
 
       <IonContent fullscreen>
         <TodoList
-          todos={currentPage === ALL_TODOS ? allTodos : uncompletedTodos}
+          todos={
+            currentPage === ALL_TODOS
+              ? allTodos
+              : currentPage === COMPLETED_TODOS
+              ? completedTodos
+              : uncompletedTodos
+          }
           toggleTodo={todos.toggle}
           updateTodo={todos.update}
           removeTodo={todos.remove}

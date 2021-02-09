@@ -18,8 +18,12 @@ export const useTodos = function () {
   }, [get, set])
 
   const add = function (label: string) {
-    const id = Math.max(...list.map(todo => todo.id)) + 1 ?? 1
-    const newTodos = [...list, { id, label, completed: false }]
+    let id = -1
+    if (list.length > 0) {
+      const ids = list.map(({ id }) => id)
+      id = Math.max(...ids)
+    }
+    const newTodos = [...list, { id: id + 1, label, completed: false }]
 
     setList(newTodos)
     set(TODOS_STORAGE, JSON.stringify(newTodos))
