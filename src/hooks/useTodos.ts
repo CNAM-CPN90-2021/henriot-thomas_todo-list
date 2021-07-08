@@ -56,6 +56,9 @@ export const useTodos = function () {
     }
   }
 
+  /*
+    quel sens du détail !
+  */
   const clear = function (type: string = TODOS_TYPE.ALL) {
     let newTodos: Todo[] = []
     switch (type) {
@@ -70,6 +73,10 @@ export const useTodos = function () {
         newTodos = []
         break
     }
+
+    /*
+      cette séquence se répète pas mal, pourrait être sa propre function
+    */
     setList(newTodos)
     set(TODOS_STORAGE, JSON.stringify(newTodos))
   }

@@ -14,6 +14,9 @@ export const TodoList = ({
   updateTodo: Function
   removeTodo: Function
 }) => {
+  /*
+    je ne suis pas trop fan de ce style quand la valeur retournée fait plus d'une ligne
+  */
   if (todos.length === 0)
     return (
       <IonText>

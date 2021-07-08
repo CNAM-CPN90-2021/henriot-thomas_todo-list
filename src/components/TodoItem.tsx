@@ -65,6 +65,10 @@ export const TodoItem = ({
         value={text}
         readonly={!edition}
         onIonChange={handleChange}
+        /*
+          attention on ne veut pas forcément preventDefault() ici
+          ex: appui sur tab, flèches, etc.
+        */
         onKeyUp={e => (e.key === "Enter" ? handleClick() : e.preventDefault())}
         onFocus={handleFocus}
       />

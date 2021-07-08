@@ -20,9 +20,11 @@ import { TODOS_TYPE } from "../constants"
 import { Todo } from "../hooks/useTodos"
 import "./Home.css"
 
-const Home = ({
-  todos,
-}: {
+
+/*
+  je recommande de déclarer le type des Props en dehors de la fonction, histoire de gagner en lisibilité
+*/
+type Props = {
   todos: {
     list: Todo[]
     add: Function
@@ -30,16 +32,24 @@ const Home = ({
     toggle: Function
     update: Function
   }
-}) => {
+}
+
+const Home = ({ todos }: Props) => {
   const [currentPage, setCurrentPage] = useState(TODOS_TYPE.UNCOMPLETED)
   const [text, setText] = useState("")
 
+  /*
+    👍
+  */
   const completedTodos = todos.list.filter((todo: Todo) => todo.completed)
   const uncompletedTodos = todos.list.filter((todo: Todo) => !todo.completed)
   const allTodos = todos.list
 
   const todoInput = useRef<HTMLIonInputElement>(null)
 
+  /*
+    👍
+  */
   const pages = [
     { value: TODOS_TYPE.ALL, label: "Tous" },
     { value: TODOS_TYPE.UNCOMPLETED, label: "A Faire" },
